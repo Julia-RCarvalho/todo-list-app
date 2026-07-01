@@ -1,4 +1,4 @@
-package com.example.todolist.data
+package com.example.todolist.data.repository
 
 import com.example.todolist.domain.ToDo
 import kotlinx.coroutines.flow.Flow

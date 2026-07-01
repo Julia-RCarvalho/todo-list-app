@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.todolist"
+        applicationId = "com.jerc.todolist"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

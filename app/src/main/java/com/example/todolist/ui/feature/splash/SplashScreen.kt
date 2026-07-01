@@ -21,7 +21,7 @@ import com.example.todolist.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashGifScreen(
+fun SplashScreen(
     onSplashFinished: () -> Unit
 ) {
     val context = LocalContext.current
@@ -36,7 +36,7 @@ fun SplashGifScreen(
         .build()
 
     LaunchedEffect(Unit) {
-        delay(6000) // Duração do GIF (3 segundos)
+        delay(6000)
         onSplashFinished()
     }
 

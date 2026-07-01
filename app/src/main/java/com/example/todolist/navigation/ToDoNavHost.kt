@@ -7,25 +7,23 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.todolist.ui.feature.addedit.AddEditScreen
 import com.example.todolist.ui.feature.list.ListScreen
-import com.example.todolist.ui.feature.splash.SplashGifScreen
+import com.example.todolist.ui.feature.splash.SplashScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
 object SplashRoute
 
 @Serializable
-object ListRoute //Define a rota para a tela principal de listagem
-// Como não precisa de parâmetros (argumentos), é definida como um object (instância única)
-
+object ListRoute
 @Serializable
 data class AddEditRoute(val id: Long? = null)
 
-@Composable //indica que a função abaixo faz parte da interface de usuário do Jetpack Compose
+@Composable
 fun ToDoNavHost(){
-    val navController = rememberNavController() //cria e lembra o controlador da navegação
+    val navController = rememberNavController()
     NavHost(navController = navController, startDestination = SplashRoute){
         composable<SplashRoute> {
-            SplashGifScreen(
+            SplashScreen(
                 onSplashFinished = {
                     navController.navigate(ListRoute) {
                         popUpTo(SplashRoute) { inclusive = true }

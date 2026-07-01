@@ -1,5 +1,7 @@
-package com.example.todolist.data
+package com.example.todolist.data.repository
 
+import com.example.todolist.data.database.ToDoDao
+import com.example.todolist.data.model.ToDoEntity
 import com.example.todolist.domain.ToDo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,7 +21,7 @@ class ToDoRepositoryImpl(
             description = description,
             isCompleted = false,
 
-        )
+            )
 
         dao.insert(entity)
     }

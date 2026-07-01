@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.ToDoRepository
+import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.ui.UiEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class AddEditViewModel(
     private val id: Long? = null,
-    private val repository: ToDoRepository,
+    private val useCases: ToDoUseCases,
 ): ViewModel() {
 
     var title by mutableStateOf("")
@@ -28,7 +28,7 @@ class AddEditViewModel(
     init {
         id?.let {
             viewModelScope.launch{
-                val ToDo = repository.getBy(it)
+                val ToDo = useCases.getToDo(it)
                 title = ToDo?.title?:""
                 description = ToDo?.description
             }
@@ -59,12 +59,12 @@ class AddEditViewModel(
 
     private fun saveToDo() {
         viewModelScope.launch {
-            if (title.isBlank()) {
-                _uiEvent.send(UiEvent.ShowSnackbar("O título não pode estar vazio"))
-                return@launch
+            try {
+                useCases.saveToDo(title, description, id)
+                _uiEvent.send(UiEvent.NavigateBack)
+            } catch (e: IllegalArgumentException) {
+                _uiEvent.send(UiEvent.ShowSnackbar(e.message ?: "Erro ao salvar"))
             }
-            repository.insert(title, description, id)
-            _uiEvent.send(UiEvent.NavigateBack)
         }
     }
 }

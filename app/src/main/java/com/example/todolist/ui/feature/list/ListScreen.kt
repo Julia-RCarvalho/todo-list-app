@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import com.example.todolist.R
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,12 +41,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todolist.data.ToDoDataBaseProvider
-import com.example.todolist.data.ToDoRepositoryImpl
+import com.example.todolist.data.database.ToDoDataBaseProvider
+import com.example.todolist.data.repository.ToDoRepositoryImpl
 import com.example.todolist.domain.ToDo
 import com.example.todolist.domain.toDo1
 import com.example.todolist.domain.toDo2
 import com.example.todolist.domain.toDo3
+import com.example.todolist.domain.usecase.DeleteToDoUseCase
+import com.example.todolist.domain.usecase.GetAllToDosUseCase
+import com.example.todolist.domain.usecase.GetToDoUseCase
+import com.example.todolist.domain.usecase.SaveToDoUseCase
+import com.example.todolist.domain.usecase.SetToDoCompletedUseCase
+import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.navigation.AddEditRoute
 import com.example.todolist.ui.UiEvent
 import com.example.todolist.ui.components.ToDoItem
@@ -65,8 +69,15 @@ fun ListScreen(
     val repository = ToDoRepositoryImpl(
         dao = database.ToDoDao
     )
+    val useCases = ToDoUseCases(
+        getAllToDos = GetAllToDosUseCase(repository),
+        getToDo = GetToDoUseCase(repository),
+        saveToDo = SaveToDoUseCase(repository),
+        deleteToDo = DeleteToDoUseCase(repository),
+        setToDoCompleted = SetToDoCompletedUseCase(repository)
+    )
     val viewModel = viewModel<ListViewModel> {
-        ListViewModel(repository = repository)
+        ListViewModel(useCases = useCases)
     }
 
     val todos by viewModel.todos.collectAsState()
@@ -87,7 +98,7 @@ fun ListScreen(
                 }
 
                 UiEvent.NavigateBack -> {
-                    // Não aplicável na ListScreen
+
                 }
             }
         }
@@ -132,7 +143,6 @@ fun ListContent(
                     )
                 },
                 actions = {
-                    // Ícone de Menu posicionado no canto direito
                     IconButton(onClick = { showPhoto = true }) {
                         Icon(
                             imageVector = Icons.Default.Star,

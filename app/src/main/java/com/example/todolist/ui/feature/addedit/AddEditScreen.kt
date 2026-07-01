@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -26,13 +25,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todolist.data.ToDoDataBaseProvider
-import com.example.todolist.data.ToDoRepositoryImpl
+import com.example.todolist.data.database.ToDoDataBaseProvider
+import com.example.todolist.data.repository.ToDoRepositoryImpl
+import com.example.todolist.domain.usecase.DeleteToDoUseCase
+import com.example.todolist.domain.usecase.GetAllToDosUseCase
+import com.example.todolist.domain.usecase.GetToDoUseCase
+import com.example.todolist.domain.usecase.SaveToDoUseCase
+import com.example.todolist.domain.usecase.SetToDoCompletedUseCase
+import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.ui.UiEvent
 import com.example.todolist.ui.theme.ToDoListTheme
 
@@ -46,10 +50,17 @@ fun AddEditScreen(
     val repository = ToDoRepositoryImpl(
         dao = database.ToDoDao
     )
+    val useCases = ToDoUseCases(
+        getAllToDos = GetAllToDosUseCase(repository),
+        getToDo = GetToDoUseCase(repository),
+        saveToDo = SaveToDoUseCase(repository),
+        deleteToDo = DeleteToDoUseCase(repository),
+        setToDoCompleted = SetToDoCompletedUseCase(repository)
+    )
     val viewModel = viewModel<AddEditViewModel> {
         AddEditViewModel(
             id = id,
-            repository = repository
+            useCases = useCases
         )
     }
 
