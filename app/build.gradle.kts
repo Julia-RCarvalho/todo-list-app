@@ -15,11 +15,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.jerc.todolist"
+        applicationId = "com.juliacarvalho.todolist"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
