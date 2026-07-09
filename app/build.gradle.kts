@@ -8,18 +8,14 @@ plugins {
 
 android {
     namespace = "com.example.todolist"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.juliacarvalho.todolist"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "0.1"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,6 +50,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Room
     implementation(libs.androidx.room.runtime)

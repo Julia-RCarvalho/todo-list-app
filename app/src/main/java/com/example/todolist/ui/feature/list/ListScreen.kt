@@ -1,5 +1,6 @@
 package com.example.todolist.ui.feature.list
 
+import android.R.attr.tint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,6 +65,8 @@ import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun ListScreen(
+    isDarkTheme: Boolean,
+    onThemeChange: () -> Unit,
     navigateToAddEditScreen: (id: Long?) -> Unit,
 ) {
     val context = LocalContext.current.applicationContext
@@ -105,6 +110,8 @@ fun ListScreen(
     }
 
     ListContent(
+        isDarkTheme = isDarkTheme,
+        onThemeChange = onThemeChange,
         todos = todos,
         onEvent = viewModel::onEvent,
         snackbarHostState = snackbarHostState,
@@ -113,6 +120,8 @@ fun ListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListContent(
+    isDarkTheme: Boolean,
+    onThemeChange: () -> Unit,
     todos: List<ToDo>,
     onEvent: (ListEvent) -> Unit,
     snackbarHostState: SnackbarHostState,
@@ -143,6 +152,17 @@ fun ListContent(
                     )
                 },
                 actions = {
+                    IconButton(onClick = onThemeChange){
+                        Icon(
+                            imageVector = if(isDarkTheme) {
+                                Icons.Filled.LightMode
+                            } else {
+                                Icons.Filled.DarkMode
+                            },
+                            contentDescription = "Alternar tema",
+                            tint = Color.White
+                        )
+                    }
                     IconButton(onClick = { showPhoto = true }) {
                         Icon(
                             imageVector = Icons.Default.Star,
@@ -225,6 +245,8 @@ fun ListContent(
 private fun ListContentPreview() {
     ToDoListTheme {
         ListContent(
+            isDarkTheme = false,
+            onThemeChange = {},
             todos = listOf(
                 toDo1,
                 toDo2,

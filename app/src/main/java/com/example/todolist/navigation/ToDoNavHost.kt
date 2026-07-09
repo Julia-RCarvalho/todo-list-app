@@ -19,7 +19,10 @@ object ListRoute
 data class AddEditRoute(val id: Long? = null)
 
 @Composable
-fun ToDoNavHost(){
+fun ToDoNavHost(
+    isDarkTheme: Boolean,
+    onThemeChange: () -> Unit
+){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = SplashRoute){
         composable<SplashRoute> {
@@ -34,6 +37,8 @@ fun ToDoNavHost(){
 
         composable<ListRoute> {
             ListScreen(
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
                 navigateToAddEditScreen = {id ->
                     navController.navigate(AddEditRoute(id = id))
                 }
