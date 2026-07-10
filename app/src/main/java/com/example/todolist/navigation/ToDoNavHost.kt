@@ -15,6 +15,7 @@ object SplashRoute
 
 @Serializable
 object ListRoute
+
 @Serializable
 data class AddEditRoute(val id: Long? = null)
 
@@ -49,13 +50,12 @@ fun ToDoNavHost(
             val addEditRoute = backStackEntry.toRoute<AddEditRoute>()
             AddEditScreen(
                 id = addEditRoute.id,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
                 navigateback = {
                     navController.popBackStack()
                 }
             )
-
         }
-
     }
 }
-

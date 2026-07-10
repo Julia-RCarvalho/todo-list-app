@@ -1,9 +1,6 @@
 package com.example.todolist.ui.feature.addedit
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,24 +8,18 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,13 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todolist.R
 import com.example.todolist.data.database.ToDoDataBaseProvider
 import com.example.todolist.data.repository.ToDoRepositoryImpl
 import com.example.todolist.domain.usecase.DeleteToDoUseCase
@@ -55,11 +42,15 @@ import com.example.todolist.domain.usecase.SaveToDoUseCase
 import com.example.todolist.domain.usecase.SetToDoCompletedUseCase
 import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.ui.UiEvent
+import com.example.todolist.ui.components.ToDoTopAppBar
+import com.example.todolist.ui.components.TunicoDialog
 import com.example.todolist.ui.theme.ToDoListTheme
 
 @Composable
 fun AddEditScreen(
     id: Long?,
+    isDarkTheme: Boolean,
+    onThemeChange: () -> Unit,
     navigateback: () -> Unit,
 ){
     val context = LocalContext.current.applicationContext
@@ -112,9 +103,10 @@ fun AddEditScreen(
         title = title,
         description = description,
         snackbarHostState = snackbarHostState,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        isDarkTheme = isDarkTheme,
+        onThemeChange = onThemeChange
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,42 +116,17 @@ fun AddEditContent(
     description: String?,
     snackbarHostState: SnackbarHostState,
     onEvent: (AddEditEvent) -> Unit,
+    isDarkTheme: Boolean,
+    onThemeChange: () -> Unit,
 ){
     var showPhoto by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.height(65.dp),
-                navigationIcon = {
-                    Image(
-                        painter = painterResource(id = R.drawable.tunico_branco2),
-                        contentDescription = "Logo do App",
-                        modifier = Modifier
-                            .height(44.dp)
-                            .padding(start = 8.dp)
-                    )
-                },
-                title = {
-                    Text(
-                        text = "List",
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { showPhoto = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Menu",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black
-                )
+            ToDoTopAppBar(
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
+                onShowPhoto = { showPhoto = true }
             )
         },
         floatingActionButton = {
@@ -241,21 +208,7 @@ fun AddEditContent(
     }
 
     if (showPhoto) {
-        Dialog(onDismissRequest = { showPhoto = false }) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.conheca_tunico),
-                    contentDescription = "Foto do Tunico",
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
+        TunicoDialog(onDismissRequest = { showPhoto = false })
     }
 }
 
@@ -269,6 +222,8 @@ private fun AddEditContentPreview() {
             description = null,
             snackbarHostState = SnackbarHostState(),
             onEvent = {},
+            isDarkTheme = false,
+            onThemeChange = {}
         )
     }
 }
