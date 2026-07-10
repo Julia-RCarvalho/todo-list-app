@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -126,8 +127,8 @@ fun ListContent(
                 onClick = {
                     onEvent(ListEvent.AddEdit(null))
                 },
-                containerColor = Color.Black,
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                contentColor = MaterialTheme.colorScheme.inverseOnSurface
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -142,6 +143,7 @@ fun ListContent(
             itemsIndexed(todos) { index, todo ->
                 ToDoItem(
                     todo = todo,
+                    isDarkTheme = isDarkTheme,
                     onCompletedChange = { isCompleted ->
                         onEvent(
                             ListEvent.CompleteChanged(
