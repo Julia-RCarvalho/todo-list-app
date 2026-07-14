@@ -82,7 +82,9 @@ fun ToDoItem(
                     text = todo.title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
-                    color = internalColor
+                    color = internalColor,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
                 todo.description?.let {
                     Spacer(modifier = Modifier.height(2.dp))

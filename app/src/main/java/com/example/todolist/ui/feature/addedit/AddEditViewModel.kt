@@ -38,11 +38,15 @@ class AddEditViewModel(
     fun onEvent(event: AddEditEvent) {
         when (event) {
             is AddEditEvent.TitleChanged -> {
-                title = event.title
+                if (event.title.length <= 100) {
+                    title = event.title
+                }
             }
 
             is AddEditEvent.DescriptionChanged -> {
-                description = event.description
+                if ((event.description?.length ?: 0) <= 1000) {
+                    description = event.description
+                }
             }
 
             AddEditEvent.Save -> {
