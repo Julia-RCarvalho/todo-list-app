@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todolist.domain.SubTask
 import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.ui.UiEvent
 import kotlinx.coroutines.channels.Channel
@@ -22,6 +23,12 @@ class AddEditViewModel(
     var description by mutableStateOf<String?>(null)
     private set
 
+    var subTasks by mutableStateOf<List<SubTask>>(emptyList())
+    private set
+
+    var subTaskTitle by mutableStateOf("")
+    private set
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -31,6 +38,7 @@ class AddEditViewModel(
                 val ToDo = useCases.getToDo(it)
                 title = ToDo?.title?:""
                 description = ToDo?.description
+                subTasks = ToDo?.subTasks ?: emptyList()
             }
         }
     }
@@ -44,7 +52,7 @@ class AddEditViewModel(
             }
 
             is AddEditEvent.DescriptionChanged -> {
-                if ((event.description?.length ?: 0) <= 1000) {
+                if (event.description.length <= 1000) {
                     description = event.description
                 }
             }
@@ -58,6 +66,54 @@ class AddEditViewModel(
                     _uiEvent.send(UiEvent.NavigateBack)
                 }
             }
+
+            is AddEditEvent.SubTaskTitleChanged -> {
+                subTaskTitle = event.title
+            }
+
+            AddEditEvent.AddSubTask -> {
+                addSubTask()
+            }
+
+            is AddEditEvent.DeleteSubTask -> {
+                deleteSubTask(event.subTask)
+            }
+
+            is AddEditEvent.ToggleSubTask -> {
+                toggleSubTask(event.subTask)
+            }
+        }
+    }
+
+    private fun addSubTask() {
+        val todoId = id ?: return // Só permite adicionar subtarefa se a tarefa já existir
+        if (subTaskTitle.isBlank()) return
+        
+        viewModelScope.launch {
+            useCases.addSubTask(todoId, subTaskTitle)
+            subTaskTitle = ""
+            refreshToDo()
+        }
+    }
+
+    private fun deleteSubTask(subTask: SubTask) {
+        viewModelScope.launch {
+            useCases.deleteSubTask(subTask)
+            refreshToDo()
+        }
+    }
+
+    private fun toggleSubTask(subTask: SubTask) {
+        viewModelScope.launch {
+            useCases.toggleSubTask(subTask.id, !subTask.isCompleted)
+            refreshToDo()
+        }
+    }
+
+    private suspend fun refreshToDo() {
+        id?.let {
+            val ToDo = useCases.getToDo(it)
+            subTasks = ToDo?.subTasks ?: emptyList()
         }
     }
 

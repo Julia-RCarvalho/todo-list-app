@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,11 +34,14 @@ import com.example.todolist.domain.ToDo
 import com.example.todolist.domain.toDo1
 import com.example.todolist.domain.toDo2
 import com.example.todolist.domain.toDo3
+import com.example.todolist.domain.usecase.AddSubTaskUseCase
+import com.example.todolist.domain.usecase.DeleteSubTaskUseCase
 import com.example.todolist.domain.usecase.DeleteToDoUseCase
 import com.example.todolist.domain.usecase.GetAllToDosUseCase
 import com.example.todolist.domain.usecase.GetToDoUseCase
 import com.example.todolist.domain.usecase.SaveToDoUseCase
 import com.example.todolist.domain.usecase.SetToDoCompletedUseCase
+import com.example.todolist.domain.usecase.ToggleSubTaskUseCase
 import com.example.todolist.domain.usecase.ToDoUseCases
 import com.example.todolist.navigation.AddEditRoute
 import com.example.todolist.ui.UiEvent
@@ -63,7 +66,10 @@ fun ListScreen(
         getToDo = GetToDoUseCase(repository),
         saveToDo = SaveToDoUseCase(repository),
         deleteToDo = DeleteToDoUseCase(repository),
-        setToDoCompleted = SetToDoCompletedUseCase(repository)
+        setToDoCompleted = SetToDoCompletedUseCase(repository),
+        addSubTask = AddSubTaskUseCase(repository),
+        deleteSubTask = DeleteSubTaskUseCase(repository),
+        toggleSubTask = ToggleSubTaskUseCase(repository)
     )
     val viewModel = viewModel<ListViewModel> {
         ListViewModel(useCases = useCases)
@@ -140,7 +146,7 @@ fun ListContent(
                 .padding(paddingValues),
             contentPadding = PaddingValues(16.dp)
         ) {
-            itemsIndexed(todos) { index, todo ->
+            items(todos, key = { it.id }) { todo ->
                 ToDoItem(
                     todo = todo,
                     isDarkTheme = isDarkTheme,
@@ -159,10 +165,7 @@ fun ListContent(
                         onEvent(ListEvent.Delete(todo.id))
                     }
                 )
-
-                if (index < todos.lastIndex) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

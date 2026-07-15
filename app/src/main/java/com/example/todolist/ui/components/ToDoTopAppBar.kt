@@ -35,6 +35,9 @@ fun ToDoTopAppBar(
     onThemeChange: () -> Unit,
     onShowPhoto: () -> Unit
 ) {
+    val barColor = if (isDarkTheme) Color(0xFF1A1A1A) else Color.Black
+    val contentColor = Color.White // Mantendo branco para contraste com a barra escura
+
     CenterAlignedTopAppBar(
         modifier = Modifier.height(65.dp),
         navigationIcon = {
@@ -49,7 +52,7 @@ fun ToDoTopAppBar(
         title = {
             Text(
                 text = "List",
-                color = Color.White,
+                color = contentColor,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.ExtraBold
             )
@@ -59,19 +62,19 @@ fun ToDoTopAppBar(
                 Icon(
                     imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
                     contentDescription = "Alternar tema",
-                    tint = Color.White
+                    tint = contentColor
                 )
             }
             IconButton(onClick = onShowPhoto) {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = "Menu",
-                    tint = Color.White
+                    tint = contentColor
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Black
+            containerColor = barColor
         )
     )
 }
@@ -84,7 +87,7 @@ fun TunicoDialog(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White, shape = RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {

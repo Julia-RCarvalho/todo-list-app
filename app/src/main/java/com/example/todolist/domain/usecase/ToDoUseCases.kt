@@ -5,5 +5,8 @@ data class ToDoUseCases(
     val getToDo: GetToDoUseCase,
     val saveToDo: SaveToDoUseCase,
     val deleteToDo: DeleteToDoUseCase,
-    val setToDoCompleted: SetToDoCompletedUseCase
+    val setToDoCompleted: SetToDoCompletedUseCase,
+    val addSubTask: AddSubTaskUseCase,
+    val deleteSubTask: DeleteSubTaskUseCase,
+    val toggleSubTask: ToggleSubTaskUseCase
 )

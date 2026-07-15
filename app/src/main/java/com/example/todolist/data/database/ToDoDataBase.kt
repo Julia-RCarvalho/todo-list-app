@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.todolist.data.database.ToDoDao
+import com.example.todolist.data.model.SubTaskEntity
 import com.example.todolist.data.model.ToDoEntity
 
 @Database(
-    entities = [ToDoEntity::class],
-    version = 1,
+    entities = [ToDoEntity::class, SubTaskEntity::class],
+    version = 2,
 )
 
 abstract class ToDoDataBase : RoomDatabase() {
@@ -27,7 +28,8 @@ object ToDoDataBaseProvider {
                 context.applicationContext,
                 ToDoDataBase::class.java,
                 "toDo-app"
-            ).build()
+            ).fallbackToDestructiveMigration()
+                .build()
             INSTANCE = instance
             instance
         }

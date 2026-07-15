@@ -5,6 +5,14 @@ data class ToDo(
     val title: String,
     val description: String?,
     val isCompleted: Boolean,
+    val subTasks: List<SubTask> = emptyList()
+)
+
+data class SubTask(
+    val id: Long = 0,
+    val todoId: Long = 0,
+    val title: String,
+    val isCompleted: Boolean = false
 )
 
 val toDo1 = ToDo(
